@@ -11,7 +11,6 @@ def cfmodel_loader(*args, **kwargs):
     return CFModel(users=unique_users, items=unique_animes, embedding_dim=32, **kwargs)
 
 df_merged = pd.merge(df_sample, df, on='anime_id')
-print(df_merged[:5])
 model = tf.keras.models.load_model("anime.keras",custom_objects={"CFModel":cfmodel_loader})
 model = model(unique_users,unique_animes)
 
@@ -37,7 +36,16 @@ def recc():
     print(recc_anime)
     reccs = df_merged[df_merged['anime_id'].isin(recc_anime)].to_dict(orient='records')
     return jsonify(reccs)
-
-
+@app.route("/search")
+def search():
+    query = request.args.get("q", "").lower()
+    print(query,request.args)
+    if not query:
+        return jsonify(results=[])
+    
+    filtered = df_sample[df_sample['title'].str.lower().str.startswith(query)]
+    results = filtered[['anime_id', 'title']].to_dict(orient='records')
+    
+    return jsonify(results=results)
 if __name__=="__main__":
     app.run()
