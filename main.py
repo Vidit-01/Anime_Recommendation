@@ -2,7 +2,7 @@ import tensorflow as tf
 import pandas as pd
 from cfmodel import CFModel
 from flask import Flask,request,jsonify
-
+from flask_cors import CORS
 df_sample = pd.read_csv('anime_list.csv',usecols=["anime_id","title"]).astype(str)
 unique_animes= pd.read_csv("anime.csv")["anime_id"].astype(str).tolist()
 unique_users = pd.read_csv("userlist.csv")["username"].astype(str).tolist()
@@ -28,18 +28,19 @@ def recommend_for_anime_ids(liked_ids, k=5):
 
 
 app = Flask(__name__)
-
+CORS(app)
 @app.route("/recc",methods=["POST"])
 def recc():
     liked_anime = request.get_json()["anime"]
+    liked_anime = [z["anime_id"] for z in liked_anime]
     recc_anime = recommend_for_anime_ids(liked_anime)
-    print(recc_anime)
     reccs = df_merged[df_merged['anime_id'].isin(recc_anime)].to_dict(orient='records')
+    
     return jsonify(reccs)
+
 @app.route("/search")
 def search():
     query = request.args.get("q", "").lower()
-    print(query,request.args)
     if not query:
         return jsonify(results=[])
     
@@ -48,4 +49,5 @@ def search():
     
     return jsonify(results=results)
 if __name__=="__main__":
+    
     app.run()
