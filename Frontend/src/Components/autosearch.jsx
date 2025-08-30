@@ -50,7 +50,9 @@ const AutocompleteSearch = ({ fetchSuggestions}) => {
   };
 
   return (
-    <>
+    <><div className="flex relative w-full items-center justify-center pt-10 px-4">
+        <h1 className="text-5xl font-bold mb-4 text-white">Anime Recommender</h1>
+        </div>
       <div className="flex relative w-full items-center justify-center pt-10 px-4">
         <div className="flex flex-col sm:flex-row justify-center w-full max-w-2xl gap-2">
           {/* Search Box */}
@@ -107,6 +109,7 @@ const AutocompleteSearch = ({ fetchSuggestions}) => {
       <div className="flex justify-center">
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-4 w-2/3">
         {reccanime.map((anime) => (
+          <a href={`https://myanimelist.net/anime/${anime.anime_id}`}>
           <div
             key={anime.anime_id}
             className="bg-gray-800 rounded-xl shadow-md overflow-hidden"
@@ -122,6 +125,7 @@ const AutocompleteSearch = ({ fetchSuggestions}) => {
               </h3>
             </div>
           </div>
+          </a>
         ))}
       </div>
       </div>

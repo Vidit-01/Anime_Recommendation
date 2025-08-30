@@ -7,7 +7,7 @@ import requests
 df_sample = pd.read_csv('anime_list.csv',usecols=["anime_id","title"]).astype(str)
 unique_animes= pd.read_csv("anime.csv")["anime_id"].astype(str).tolist()
 unique_users = pd.read_csv("userlist.csv")["username"].astype(str).tolist()
-df = pd.read_csv("poster.csv").astype(str)
+df = pd.read_csv("anime_images.csv").astype(str)
 def cfmodel_loader(*args, **kwargs):
     return CFModel(users=unique_users, items=unique_animes, embedding_dim=32, **kwargs)
 
@@ -45,8 +45,6 @@ def recc():
     liked_anime = [z["anime_id"] for z in liked_anime]
     recc_anime = recommend_for_anime_ids(liked_anime)
     reccs = df_merged[df_merged['anime_id'].isin(recc_anime)]
-    for anime_id in recc_anime:
-        reccs.loc[reccs["anime_id"]== anime_id,"image_url"] = newurl(anime_id)
     reccs = reccs.to_dict(orient="records")
     return jsonify(reccs)
 
