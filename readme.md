@@ -93,10 +93,10 @@ pip install -r requirements.txt  # Add requirements.txt if missing
 ```
 
 ### 3. Train the Model
-
+(Would require Kaggle Authentication and would have to enter dataset link)
 ```sh
 cd Training
-python untitled1.py  # Or run the notebook for training
+python main.py  # Or run the notebook for training
 ```
 
 ### 4. Start Backend API
