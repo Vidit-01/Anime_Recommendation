@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Recommend from "./Recommend";
 
-const AutocompleteSearch = ({ fetchSuggestions, reccomationapi }) => {
+const AutocompleteSearch = ({ fetchSuggestions}) => {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [likedAnime, setLikedAnime] = useState([]);

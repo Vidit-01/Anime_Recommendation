@@ -3,6 +3,7 @@ import pandas as pd
 from cfmodel import CFModel
 from flask import Flask,request,jsonify
 from flask_cors import CORS
+import requests
 df_sample = pd.read_csv('anime_list.csv',usecols=["anime_id","title"]).astype(str)
 unique_animes= pd.read_csv("anime.csv")["anime_id"].astype(str).tolist()
 unique_users = pd.read_csv("userlist.csv")["username"].astype(str).tolist()
@@ -29,13 +30,24 @@ def recommend_for_anime_ids(liked_ids, k=5):
 
 app = Flask(__name__)
 CORS(app)
+def newurl(anime_id):
+    response = requests.get(f"https://api.jikan.moe/v4/anime/{anime_id}")
+    poster_url = "https://t4.ftcdn.net/jpg/00/89/55/15/360_F_89551596_LdHAZRwz3i4EM4J0NHNHy2hEUYDfXc0j.jpg"
+    if response.status_code == 200:
+        data = response.json()
+        poster_url = data['data']['images']['jpg']['image_url']
+        
+    return poster_url
+
 @app.route("/recc",methods=["POST"])
 def recc():
     liked_anime = request.get_json()["anime"]
     liked_anime = [z["anime_id"] for z in liked_anime]
     recc_anime = recommend_for_anime_ids(liked_anime)
-    reccs = df_merged[df_merged['anime_id'].isin(recc_anime)].to_dict(orient='records')
-    
+    reccs = df_merged[df_merged['anime_id'].isin(recc_anime)]
+    for anime_id in recc_anime:
+        reccs.loc[reccs["anime_id"]== anime_id,"image_url"] = newurl(anime_id)
+    reccs = reccs.to_dict(orient="records")
     return jsonify(reccs)
 
 @app.route("/search")
