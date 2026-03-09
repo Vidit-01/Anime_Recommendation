@@ -140,6 +140,3 @@ npm run dev  # Or npm start
 - Inspired by open-source anime recommendation systems and collaborative filtering research.
 - Built with TensorFlow, Flask/FastAPI, React, and Vite.
 
----
-
-**Feel free to update this README with dataset sources, API details, screenshots, or contribution guidelines as
